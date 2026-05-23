@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -81,6 +84,26 @@ func (bc *BlockChain) isValid() bool {
 	return true
 }
 
+func (bc *BlockChain) printChain() {
+	for _, block := range bc.Blocks {
+		fmt.Printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+		fmt.Printf("Block #%d\n", block.INDEX)
+		fmt.Printf("Data: %s\n", block.Data)
+
+		hash := block.Hash
+		if len(hash) > 16 {
+			hash = hash[:16] + "..."
+		}
+		fmt.Printf("Hash: %s\n", hash)
+
+		previousHash := block.PreviousHash
+		if len(previousHash) > 16 {
+			previousHash = previousHash[:16] + "..."
+		}
+		fmt.Printf("Previous: %s\n", previousHash)
+	}
+}
+
 func main() {
 	// create blockchain starting with the genesis block
 	blockchain := BlockChain{
@@ -92,15 +115,37 @@ func main() {
 	blockchain.addBlock("Bob sent 5 BTC to Charlie")
 	blockchain.addBlock("Charlie sent 2 BTC to Alice")
 
-	// Validate
-	fmt.Println("Is blockchain valid?", blockchain.isValid())
+	reader := bufio.NewReader(os.Stdin)
 
-	for _, block := range blockchain.Blocks {
-		fmt.Printf("Block #%d\n", block.INDEX)
-		fmt.Printf("Data: %s\n", block.Data)
-		fmt.Printf("Hash: %s\n", block.Hash)
-		fmt.Printf("Previous Hash: %s\n\n", block.PreviousHash)
+	fmt.Println("Simple Blockchain CLI")
+	fmt.Println("Commands: add, print, verify, quit")
+
+	for {
+		fmt.Print("\n> ")
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+
+		switch input {
+		case "add":
+			fmt.Print("Enter block data: ")
+			data, _ := reader.ReadString('\n')
+			data = strings.TrimSpace(data)
+			blockchain.addBlock(data)
+		case "print":
+			blockchain.printChain()
+
+		case "verify":
+			if blockchain.isValid() {
+				fmt.Println("Blockchain is VALID")
+			} else {
+				fmt.Println("Blockchain is INVALID - tampering detected!")
+			}
+		case "quit":
+			fmt.Println("Goodbye")
+			return
+
+		default:
+			fmt.Println("Unknown command. Try add, print, verify, quit")
+		}
 	}
-
-	
 }
