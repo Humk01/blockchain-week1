@@ -1,22 +1,49 @@
 package main
 
 import (
-	"fmt"
 	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"strconv"
+	"time"
 )
 
-func main () {
-	// simple hash
+type Block struct {
+	INDEX        int
+	Timestamp    string
+	Data         string
+	PreviousHash string
+	Hash         string
+}
 
-	data1 := "hello hashing"
-	hash1 := sha256.Sum256([]byte(data1))
 
-	fmt.Printf("Data: %s\n", data1)
-    fmt.Printf("Hash: %x\n\n", hash1)
+func (b *Block) CalculateHash() string {
 
-	data2 := "hello hashing"
-	hash2 := sha256.Sum256([]byte(data2))
+	// combines all blocks data into one string 
+	record := strconv.Itoa(b.INDEX) + b.Timestamp + b.Data + b.PreviousHash + b.Hash
+	hash := sha256.Sum256([]byte(record))
 
-	fmt.Printf("Data: %s\n", data2)
-    fmt.Printf("Hash: %x\n\n", hash2)
+	//convert to hex string
+	return hex.EncodeToString(hash[:])
+
+
+}
+
+func createGenesisBlock() Block {
+	genesisBlock := Block {
+		INDEX: 0,
+		Timestamp: time.Now().String(),
+		Data: "O happy day",
+		PreviousHash: "0",
+	}
+	genesisBlock.Hash = genesisBlock.CalculateHash()
+	return genesisBlock
+}
+
+func main() {
+	genesis := createGenesisBlock()
+    fmt.Printf("Block #%d created\n", genesis.INDEX)
+    fmt.Printf("Data: %s\n", genesis.Data)
+    fmt.Printf("Hash: %s\n", genesis.Hash)
+    fmt.Printf("Previous Hash\n: %s", genesis.PreviousHash)
 }
