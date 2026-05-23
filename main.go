@@ -86,7 +86,7 @@ func (bc *BlockChain) isValid() bool {
 
 func (bc *BlockChain) printChain() {
 	for _, block := range bc.Blocks {
-		fmt.Printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+		fmt.Printf("*********************\n")
 		fmt.Printf("Block #%d\n", block.INDEX)
 		fmt.Printf("Data: %s\n", block.Data)
 
