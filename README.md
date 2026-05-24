@@ -2,6 +2,11 @@
 
 A basic blockchain implementation to understand how hash chains work.
 
+## Structure
+- `main.go` - CLI entrypoint
+- `internal/blockchain` - block and chain logic
+- `internal/blockchain/blockchain_test.go` - core behavior tests
+
 ## What It Does
 - Creates blocks with data
 - Links blocks using cryptographic hashes
@@ -9,7 +14,7 @@ A basic blockchain implementation to understand how hash chains work.
 
 ## How to Run
 ```bash
-go run main.go
+go run .
 ```
 
 ## Commands
