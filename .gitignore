@@ -1,1 +1,22 @@
+# Local Codex metadata
 .codex
+
+# Environment files
+.env
+.env.*
+*.local
+
+# Go build/test output
+bin/
+dist/
+build/
+coverage.out
+*.test
+
+# Logs
+*.log
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/

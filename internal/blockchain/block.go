@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"strconv"
 	"time"
+	"fmt"
 )
 
 // Block is one record in the chain.
@@ -14,6 +15,21 @@ type Block struct {
 	Data         string
 	PreviousHash string
 	Hash         string
+}
+
+type Transaction struct {
+	To string 
+	From string
+	amount float64
+}
+
+func (tx Transaction) String() string {
+	return fmt.Sprintf("%s->%s:%.2f", tx.From, tx.To, tx.amount)
+}
+
+func (tx Transaction) Hash() string {
+	hash := sha256.Sum256([]byte(tx.String()))
+	return hex.EncodeToString(hash[:])
 }
 
 // CalculateHash returns the SHA-256 hash for the block contents.
