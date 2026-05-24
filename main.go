@@ -9,6 +9,15 @@ import (
 	"blockchain-week1/internal/blockchain"
 )
 
+func printHelp() {
+	fmt.Println("Commands: add, print, verify, help, quit")
+	fmt.Println("  add    - Add a new block")
+	fmt.Println("  print  - View the blockchain")
+	fmt.Println("  verify - Check if chain is valid")
+	fmt.Println("  help   - Show this help message")
+	fmt.Println("  quit   - Exit")
+}
+
 func main() {
 	chain := blockchain.New()
 	chain.AddBlock("Alice sent 10 BTC to Bob")
@@ -18,7 +27,7 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("Simple Blockchain CLI")
-	fmt.Println("Commands: add, print, verify, quit")
+	printHelp()
 
 	for {
 		fmt.Print("\n> ")
@@ -39,11 +48,13 @@ func main() {
 			} else {
 				fmt.Println("Blockchain is INVALID - tampering detected!")
 			}
+		case "help":
+			printHelp()
 		case "quit":
 			fmt.Println("Goodbye")
 			return
 		default:
-			fmt.Println("Unknown command. Try add, print, verify, quit")
+			fmt.Println("Unknown command. Type 'help' to see available commands.")
 		}
 	}
 }

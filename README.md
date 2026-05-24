@@ -21,6 +21,7 @@ go run .
 - `add` - Add a new block
 - `print` - View the blockchain
 - `verify` - Check if chain is valid
+- `help` - Show the available commands
 - `quit` - Exit
 
 ## What I Learned
