@@ -8,7 +8,8 @@ A basic blockchain implementation to understand how hash chains work.
 - `internal/blockchain/blockchain_test.go` - core behavior tests
 
 ## What It Does
-- Creates blocks with data
+- Creates blocks with transactions
+- Builds a Merkle tree for each block
 - Links blocks using cryptographic hashes
 - Detects tampering with old blocks
 

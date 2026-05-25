@@ -11,7 +11,6 @@ import (
 type Block struct {
 	Index        int
 	Timestamp    string
-	Data         string
 	Transactions []Transaction
 	MerkleRoot   string
 	PreviousHash string
@@ -34,7 +33,7 @@ func (tx Transaction) Hash() string {
 
 // CalculateHash returns the SHA-256 hash for the block contents.
 func (b Block) CalculateHash() string {
-	record := strconv.Itoa(b.Index) + b.Timestamp + b.Data + b.MerkleRoot + b.PreviousHash
+	record := strconv.Itoa(b.Index) + b.Timestamp + calculateMerkleRoot(b.Transactions) + b.PreviousHash
 	sum := sha256.Sum256([]byte(record))
 	return hex.EncodeToString(sum[:])
 }
@@ -72,12 +71,10 @@ func calculateMerkleRoot(transactions []Transaction) string {
 }
 
 // NewBlock creates a new block that points at the previous hash.
-func NewBlock(index int, data, previousHash string) Block {
-	transactions := []Transaction{{Data: data}}
+func NewBlock(index int, previousHash string, transactions []Transaction) Block {
 	block := Block{
 		Index:        index,
 		Timestamp:    time.Now().UTC().Format(time.RFC3339Nano),
-		Data:         data,
 		Transactions: transactions,
 		MerkleRoot:   calculateMerkleRoot(transactions),
 		PreviousHash: previousHash,
@@ -88,5 +85,5 @@ func NewBlock(index int, data, previousHash string) Block {
 
 // NewGenesisBlock creates the first block in a chain.
 func NewGenesisBlock() Block {
-	return NewBlock(0, "James sent 10 BTC to Gladys", "0")
+	return NewBlock(0, "0", []Transaction{{Data: "James sent 10 BTC to Gladys"}})
 }

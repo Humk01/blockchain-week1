@@ -17,7 +17,7 @@ func New() *BlockChain {
 // AddBlock appends a new block to the chain.
 func (bc *BlockChain) AddBlock(data string) {
 	previousBlock := bc.Blocks[len(bc.Blocks)-1]
-	newBlock := NewBlock(previousBlock.Index+1, data, previousBlock.Hash)
+	newBlock := NewBlock(previousBlock.Index+1, previousBlock.Hash, []Transaction{{Data: data}})
 	bc.Blocks = append(bc.Blocks, newBlock)
 }
 
@@ -46,7 +46,9 @@ func (bc *BlockChain) Print() {
 	for _, block := range bc.Blocks {
 		fmt.Printf("*********************\n")
 		fmt.Printf("Block #%d\n", block.Index)
-		fmt.Printf("Data: %s\n", block.Data)
+		for i, tx := range block.Transactions {
+			fmt.Printf("Tx %d: %s\n", i, tx.Data)
+		}
 		fmt.Printf("Merkle: %s\n", block.MerkleRoot)
 
 		hash := block.Hash
