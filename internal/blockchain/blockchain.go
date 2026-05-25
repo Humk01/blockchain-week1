@@ -47,6 +47,7 @@ func (bc *BlockChain) Print() {
 		fmt.Printf("*********************\n")
 		fmt.Printf("Block #%d\n", block.Index)
 		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Merkle: %s\n", block.MerkleRoot)
 
 		hash := block.Hash
 		if len(hash) > 16 {
