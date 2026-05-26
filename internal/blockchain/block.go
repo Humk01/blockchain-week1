@@ -3,6 +3,7 @@ package blockchain
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -19,18 +20,23 @@ type Block struct {
 
 // Transaction is a simple payload that participates in the Merkle tree.
 type Transaction struct {
-	Data string
+	To     string
+	From   string
+	Amount float64
 }
 
+// String formats a transaction for display and hashing.
 func (tx Transaction) String() string {
-	return tx.Data
+	return fmt.Sprintf("%s sent %.2f to %s", tx.From, tx.Amount, tx.To)
 }
 
+// Hash returns the SHA-256 hash of a transaction.
 func (tx Transaction) Hash() string {
 	sum := sha256.Sum256([]byte(tx.String()))
 	return hex.EncodeToString(sum[:])
 }
 
+// CalculateHash returns the SHA-256 hash for the block contents.
 // CalculateHash returns the SHA-256 hash for the block contents.
 func (b Block) CalculateHash() string {
 	record := strconv.Itoa(b.Index) + b.Timestamp + calculateMerkleRoot(b.Transactions) + b.PreviousHash
@@ -39,6 +45,7 @@ func (b Block) CalculateHash() string {
 }
 
 // calculateMerkleRoot builds a Merkle root from the provided transactions.
+// calculateMerkleRoot combines transaction hashes into one Merkle root.
 func calculateMerkleRoot(transactions []Transaction) string {
 	if len(transactions) == 0 {
 		return ""
@@ -71,6 +78,7 @@ func calculateMerkleRoot(transactions []Transaction) string {
 }
 
 // NewBlock creates a new block that points at the previous hash.
+// NewBlock creates a block that links to the previous hash.
 func NewBlock(index int, previousHash string, transactions []Transaction) Block {
 	block := Block{
 		Index:        index,
@@ -84,6 +92,7 @@ func NewBlock(index int, previousHash string, transactions []Transaction) Block 
 }
 
 // NewGenesisBlock creates the first block in a chain.
+// NewGenesisBlock creates the first block in the chain.
 func NewGenesisBlock() Block {
-	return NewBlock(0, "0", []Transaction{{Data: "James sent 10 BTC to Gladys"}})
+	return NewBlock(0, "0", []Transaction{{From: "James", To: "Gladys", Amount: 10}})
 }
